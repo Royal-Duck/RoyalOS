@@ -7,25 +7,28 @@ mkdir -p bin/src/lib
 # libs compilation
 libs=""
 for file in src/lib/*; do
-	echo "BUILD PROCESS : compiling ${file} library ..."
-	extention=${file##*.}
-	error=0
+	if [ -f $file ]; then
+		echo "BUILD PROCESS : compiling ${file} library ..."
+		extention=${file##*.}
+		error=0
 
-	if [ "$extention" = "c" ]; then
-		gcc -m32 -ostdlib -fno-stack-protector -fno-builtin -c $file -o "bin/${file}lib.o"
+		if [ "$extention" = "c" ]; then
+			gcc -m32 -ostdlib -fno-stack-protector -fno-builtin -c $file -o "bin/${file}lib.o"
 	
-	elif [ "$extention" = "asm" ]; then
-		nasm -f elf32 $file -o "bin/${file}lib.o"
+		elif [ "$extention" = "asm" ]; then
+			nasm -f elf32 $file -o "bin/${file}lib.o"
 	
+		else
+			>&2 echo -e "\033[0;31mERROR : ${file}, file format not recognized !\033[0m"
+			error=1
+		fi
+	
+		if [ $error = 0 ]; then
+			libs="${libs} bin/${file}lib.o"
+		fi
 	else
-		>&2 echo -e "\033[0;31mERROR : ${file}, file format not recognized !\033[0m"
-		error=1
+		echo "BUILD PROCESS : no library found, this might be an error"
 	fi
-	
-	if [ $error = 0 ]; then
-		libs="${libs} bin/${file}lib.o"
-	fi
-
 done
 
 # kernel compilation
