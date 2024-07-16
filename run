@@ -1,0 +1,4 @@
+#! /bin/bash
+
+qemu-system-i386 -cdrom bin/RoyalOS.iso -debugcon stdio
+# 32 bits iso		| treats the image as a cdrom | to understand the "-debugcon stdio", refer to src/lib/OS_debug.c
