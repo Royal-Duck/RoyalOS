@@ -14,9 +14,7 @@
 
 #include "stdint.h"
 #include "better_types.h"
-//#include "stdmath.h"
-
-void __attribute__((cdecl)) asm_IO_port_out(uint16_t port, char byte); // writes "byte" to serial port "port"
+#include "./portIO.h"
 
 void OS_debug_E9P_putc(char character);									// putc for E9 port, refer to the implementation file for more info
 void OS_debug_E9P_puts(const char* str);								// puts for E9 port, refer to the implementation file for more info

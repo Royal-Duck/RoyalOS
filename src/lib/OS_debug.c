@@ -10,15 +10,15 @@
 └──────────────────────────────────────────────────────────────────────────────┘
 */
 
-#include "../../lib/OS_debug.h"
-#include "../../lib/math.h"
+#include "OS_debug.h"
+#include "math.h"
 
 // TIP : THE E9 PORT IS USED BY BOCHS AND QEMU TO DEBUG STUFF
 // IN QEMU, THE -debugcon OPTION IS NEEDED ALONG WITH THE OUT FILE 
 
 // sends the given character to the E9 port
 void OS_debug_E9P_putc(char character){
-	asm_IO_port_out(0xE9, character);
+	IO_port_out(0xE9, character);
 }
 
 // sends the given string to the E9 port

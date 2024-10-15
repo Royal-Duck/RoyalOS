@@ -1,5 +1,8 @@
 #! /bin/bash
 
+gcc_args="-m32 -nostdlib -fno-stack-protector -fno-builtin -I lib -c"
+ld_args="-I lib -m elf_i386 -T linker.ld"
+
 # build dir cleaning
 rm -rf bin/*
 mkdir -p bin/src/lib
@@ -13,14 +16,17 @@ for file in src/lib/*; do
 		error=0
 
 		if [ "$extention" = "c" ]; then
-			gcc -m32 -ostdlib -fno-stack-protector -fno-builtin -c $file -o "bin/${file}lib.o"
+			gcc $gcc_args $file -o "bin/${file}lib.o"
 	
 		elif [ "$extention" = "asm" ]; then
 			nasm -f elf32 $file -o "bin/${file}lib.o"
-	
+		
+		elif [ "$extention" = "cignore" ]; then
+			echo -e "\033[32;1mIGNORED : ${file}\033[0m"
+			error=1		
 		else
-			>&2 echo -e "\033[0;31mERROR : ${file}, file format not recognized !\033[0m"
-			error=1
+			>&2 echo -e "\033[31;1mERROR : ${file}, file format not recognized !\033[0m"
+			error=2
 		fi
 	
 		if [ $error = 0 ]; then
@@ -33,7 +39,7 @@ done
 
 # kernel compilation
 echo "BUILD PROCESS : compiling the kernel ..."
-gcc -m32 -fno-stack-protector -fno-builtin -c src/kernel.c -o bin/kernel.o
+gcc $gcc_args src/kernel.c -o bin/kernel.o
 
 # boot_header compilation
 echo "BUILD PROCESS : compiling the boot header file (boot.s) ..."
@@ -41,7 +47,7 @@ nasm -f elf32 src/boot.s -o bin/boot.o
 
 # system linking
 echo "LINKING PROCESS : linking the kernel ..."
-ld -m elf_i386 -T linker.ld -o RoyalOS/boot/kernel bin/boot.o bin/kernel.o $libs
+ld $ld_args -o RoyalOS/boot/kernel bin/boot.o bin/kernel.o $libs
 
 # image creation
 echo "IMAGE CREATION PROCESS : building grub image ..."
