@@ -2,7 +2,7 @@
 #include "VGA.h"
 #include "GDT.h"
 
-void kmain(void); // called when startin
+void kmain(void); // called when starting
 
 void kmain(void){
 	define_GDT();
