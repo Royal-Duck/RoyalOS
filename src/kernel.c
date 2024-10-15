@@ -14,4 +14,5 @@ void kmain(void){
 	VGA_print("Hello, world!\n");
 	VGA_set_foreground_color(5);
 	VGA_print("test");
+	for (;;){}
 }
